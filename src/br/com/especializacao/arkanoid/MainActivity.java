@@ -1,6 +1,6 @@
 package br.com.especializacao.arkanoid;
 
-//Pacotes utilizados
+//Pacotes   utilizados
 import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
