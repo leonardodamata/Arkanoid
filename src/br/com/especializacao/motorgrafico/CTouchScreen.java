@@ -10,9 +10,9 @@ import android.view.View.OnTouchListener;
 public class CTouchScreen implements OnTouchListener
 {
 	//Atributos da classe
-	float fPosX = 0, fPosY = 0;
+	public float fPosX = 0, fPosY = 0;
 	int iTipoEventoAnterior = 0;
-	int iTipoEventoAtual = 0;
+	public int iTipoEventoAtual = 0;
 	
 	//Metodo utilizado para capturar as informacoes do evento ocorrido
 	public boolean onTouch(View vrComponente, MotionEvent vrEventoMovimento)
