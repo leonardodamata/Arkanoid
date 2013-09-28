@@ -7,6 +7,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import br.com.especializacao.motorgrafico.CGerenteEventos;
+import br.com.especializacao.motorgrafico.CGerenteTempo;
+import br.com.especializacao.motorgrafico.CIntervaloTempo;
 import br.com.especializacao.motorgrafico.CNioBuffer;
 import br.com.especializacao.motorgrafico.CSprite;
 
@@ -14,10 +16,8 @@ import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 
 //Classe que implementa a atividade principal da aplicacao Android
@@ -38,25 +38,6 @@ public class MainActivity extends Activity {
 	//Metodo chamado no momento da criacao da Activity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		String vDisplay = "";
-		switch (getResources().getDisplayMetrics().densityDpi) {
-		case DisplayMetrics.DENSITY_LOW:
-			vDisplay = "DENSITY_LOW";
-			break;
-		case DisplayMetrics.DENSITY_MEDIUM:
-			vDisplay = "DENSITY_MEDIUM";
-			break;
-		case DisplayMetrics.DENSITY_HIGH:
-			vDisplay = "DENSITY_HIGH";
-			break;
-		case DisplayMetrics.DENSITY_XHIGH:
-			vDisplay = "DENSITY_HIGH";		
-			break;
-		}
-		Toast.makeText(getApplicationContext(), vDisplay, Toast.LENGTH_LONG).show();
-		
-		
 
 		vrSuperficieDesenho = new GLSurfaceView(this);
 
@@ -99,13 +80,19 @@ public class MainActivity extends Activity {
 	class Renderizador implements Renderer
 	{	
 		//Constantes da classe
+ 
+		final int ABERTURA = 0, MENU = 1, JOGO = 2, AJUDA = 3; 
 		//final int TAMANHO_QUADRO = 50;
-		public int TAMANHO_QUADRO = 50;
 
 		//Atributos da classe
+		int TAMANHO_QUADRO = 50;
+		int iEstado = ABERTURA; 
+		CIntervaloTempo vrTempo = null;
 		int iLargura = 0, iAltura = 0;
+		int iSubstado = 0;
 		int[] vetCodigoSons = null;
 		CSprite[] vetSpritesJogador= null;
+		CSprite vrSpriteLogoUno = null;
 		int iDirecao = 0;
 		int iTempX = 0;
 		int iTempY = 0;
@@ -185,11 +172,33 @@ public class MainActivity extends Activity {
 		//Metodo chamado quempre que possivel para realizar o desenho grafico na superficie
 		public void onDrawFrame(GL10 vrOpenGL)
 		{		
-			//Executa todas as etapas do jogo
+			
+			//Limpa o fundo da tela
+			vrOpenGL.glClear(GL10.GL_COLOR_BUFFER_BIT);
+			
+		/*	//Gerencia os estados do jogo
+			if (iEstado == ABERTURA)
+			{
+				abertura();
+			}
+			else if (iEstado == MENU)
+			{
+				menu();
+			}
+			
+			//Executa as etapas de um jogo
+			CGerenteTempo.atualiza();
+			CGerenteEventos.vrEventosTouch.atualizaEstados();
+			
+			//Pausa no loop da aplicacao
+			pausa();*/
+			
+			
+			 //Executa todas as etapas do jogo
 			trataEventos();
 			//	atualizaInimigos();
 			desenha(vrOpenGL);
-			pausa();
+			pausa(); 
 		}
 
 		//Metodo responsavel pelo desenho
@@ -352,5 +361,34 @@ public class MainActivity extends Activity {
 			{	
 			}
 		}
+		
+		//Metodo que gerencia o estado de abertura
+	/*	public void abertura()
+		{
+			vrTempo.atualiza();
+			if (iSubstado == 0)
+			{
+				if (vrTempo.tempoFinalizado())
+				{
+					vrSpriteLogoUno.fAlpha+=0.02;
+					if (vrSpriteLogoUno.fAlpha >= 1.0f)
+					{
+						iSubstado = 1;
+					}
+				}
+			}
+			else
+			{
+				vrSpriteLogoUno.fAlpha-=0.03f;
+				if (vrSpriteLogoUno.fAlpha<=0.0f)
+				{
+					//Carrega uma musica de fundo
+					CGerenteSons.vrMusica.carregaMusica("musica.mid",true);
+					CGerenteSons.vrMusica.reproduzMusica();
+					iEstado = MENU;
+				}
+			}
+			vrSpriteLogoUno.desenhaSprite();
+		}*/
 	}
 }
