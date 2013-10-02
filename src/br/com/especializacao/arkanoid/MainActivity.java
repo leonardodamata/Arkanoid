@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
 
 	//Metodo chamado no momento da criacao da Activity
 	protected void onCreate(Bundle savedInstanceState) {
-	/*	super.onCreate(savedInstanceState);
+		/*	super.onCreate(savedInstanceState);
 
 		vrSuperficieDesenho = new GLSurfaceView(this);
 
@@ -65,27 +65,27 @@ public class MainActivity extends Activity {
 
 		//Inicializacao o gerenciador de acelerometro e o gerenciador de sons
 		CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(this);*/
-		
-		  super.onCreate(savedInstanceState);
-	        
-	        vrSuperficieDesenho = new GLSurfaceView(this);
-	        
-	        //Preparacao da janela da aplicacao (modo tela cheia)
-	        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-	        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-	        		                  WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	        
-	        Renderizador render = new Renderizador();
-	        render.setActivity(this);
-	                
-	        //Configurando a superficie de desenho
-	        vrSuperficieDesenho.setRenderer(render);
-	        
-	        //Registra a superficie de desenho ao tratador de eventos
-	        vrSuperficieDesenho.setOnTouchListener(CGerenteEventos.vrEventosTouch);
-	        
-	       //Ativa a superficie de desenho na janela
-	        setContentView(vrSuperficieDesenho); 
+
+		super.onCreate(savedInstanceState);
+
+		vrSuperficieDesenho = new GLSurfaceView(this);
+
+		//Preparacao da janela da aplicacao (modo tela cheia)
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		Renderizador render = new Renderizador();
+		render.setActivity(this);
+
+		//Configurando a superficie de desenho
+		vrSuperficieDesenho.setRenderer(render);
+
+		//Registra a superficie de desenho ao tratador de eventos
+		vrSuperficieDesenho.setOnTouchListener(CGerenteEventos.vrEventosTouch);
+
+		//Ativa a superficie de desenho na janela
+		setContentView(vrSuperficieDesenho); 
 	}
 
 
@@ -94,6 +94,8 @@ public class MainActivity extends Activity {
 	{
 		super.onPause();
 		vrSuperficieDesenho.onPause();
+		CGerenteSons.vrMusica.pausaMusica();
+		CGerenteGrafico.release();
 	}
 
 	//Metodo chamado no momento em que a Activity volta do segundo plano
@@ -174,96 +176,100 @@ public class MainActivity extends Activity {
 		{	
 
 			//Gerencia os estados do jogo
-		/*	if (iEstado == ABERTURA)
+			/*	if (iEstado == ABERTURA)
 			{
 				abertura();
 			}
 			if (iEstado == MENU)
 			{*/
-				//Armazena a altura e largura da tela
-				iLargura = pLargura;
-				iAltura = pAltura;
+			//Armazena a altura e largura da tela
+			iLargura = pLargura;
+			iAltura = pAltura;
 
-				//Configura a viewport
-				vrOpenGL.glViewport(0, 0, iLargura, iAltura);
+			//Configura a viewport
+			vrOpenGL.glViewport(0, 0, iLargura, iAltura);
 
-				//Configura a janela de visualizacao
-				//Ativa a matriz de projecao para configuração da janela de visualizacao
-				vrOpenGL.glMatrixMode(GL10.GL_PROJECTION);
+			//Configura a janela de visualizacao
+			//Ativa a matriz de projecao para configuração da janela de visualizacao
+			vrOpenGL.glMatrixMode(GL10.GL_PROJECTION);
 
-				//Inicia a matriz de projeção com a matriz identidade
-				vrOpenGL.glLoadIdentity();
+			//Inicia a matriz de projeção com a matriz identidade
+			vrOpenGL.glLoadIdentity();
 
-				//Seta as coordenadas da janela de visualizacao
-				vrOpenGL.glOrthof(0.0f, iLargura, 0.0f, iAltura,  1.0f, -1.0f);
+			//Seta as coordenadas da janela de visualizacao
+			vrOpenGL.glOrthof(0.0f, iLargura, 0.0f, iAltura,  1.0f, -1.0f);
 
-				//Inicia a matriz de desenho
-				vrOpenGL.glMatrixMode(GL10.GL_MODELVIEW);
+			//Inicia a matriz de desenho
+			vrOpenGL.glMatrixMode(GL10.GL_MODELVIEW);
 
-				//Inicia a matriz de desenho com a matriz identidade
-				vrOpenGL.glLoadIdentity();
+			//Inicia a matriz de desenho com a matriz identidade
+			vrOpenGL.glLoadIdentity();
 
-				//Configura a cor do desenho, habilita transparencia, uso de textura e vetores de vertices texturas
-				vrOpenGL.glColor4f(1.0f, 1.0f,1.0f,1.0f);
-				vrOpenGL.glEnable(GL10.GL_BLEND);
-				vrOpenGL.glEnable(GL10.GL_ALPHA_TEST);
-				vrOpenGL.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-				vrOpenGL.glEnable(GL10.GL_TEXTURE_2D);
-				vrOpenGL.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-				vrOpenGL.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+			//Configura a cor do desenho, habilita transparencia, uso de textura e vetores de vertices texturas
+			vrOpenGL.glColor4f(1.0f, 1.0f,1.0f,1.0f);
+			vrOpenGL.glEnable(GL10.GL_BLEND);
+			vrOpenGL.glEnable(GL10.GL_ALPHA_TEST);
+			vrOpenGL.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+			vrOpenGL.glEnable(GL10.GL_TEXTURE_2D);
+			vrOpenGL.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+			vrOpenGL.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
 
-				//Enviando os vertices ao OpenGL
-				vrOpenGL.glVertexPointer(2, GL10.GL_FLOAT, 0, CNioBuffer.geraNioBuffer(new float[]{-TAMANHO_QUADRO, -TAMANHO_QUADRO, 
-						-TAMANHO_QUADRO, TAMANHO_QUADRO, 
-						TAMANHO_QUADRO, -TAMANHO_QUADRO, 
-						TAMANHO_QUADRO, TAMANHO_QUADRO}));	
-				//Inicializa um interalo de tempo de 3s
-				vrTempo = new CIntervaloTempo();
-				vrTempo.reiniciaTempo(3000);
+			//Enviando os vertices ao OpenGL
+			vrOpenGL.glVertexPointer(2, GL10.GL_FLOAT, 0, CNioBuffer.geraNioBuffer(new float[]{-TAMANHO_QUADRO, -TAMANHO_QUADRO, 
+					-TAMANHO_QUADRO, TAMANHO_QUADRO, 
+					TAMANHO_QUADRO, -TAMANHO_QUADRO, 
+					TAMANHO_QUADRO, TAMANHO_QUADRO}));	
+			//Inicializa um interalo de tempo de 3s
+			vrTempo = new CIntervaloTempo();
+			vrTempo.reiniciaTempo(3000);
 
-				vrSpriteLogoUno = new CSpriteAnimacao(vrOpenGL, R.drawable.facto, 512, 256, 512, 256);
-				vrSpriteLogoUno.iPosX = iLargura/2;
-				vrSpriteLogoUno.iPosY = iAltura/2;
-				vrSpriteLogoUno.fAlpha = 0.0f;
-				vrSpriteLogoUno.fEscalaX = ((iLargura    /  5.0f) / vrSpriteLogoUno.iLarguraQuadro);
-				vrSpriteLogoUno.fEscalaY = ((iAltura    /   6.0f) / vrSpriteLogoUno.iAlturaQuadro);
+			vrSpriteLogoUno = new CSpriteAnimacao(vrOpenGL, R.drawable.facto, 512, 256, 512, 256);
+			vrSpriteLogoUno.iPosX = iLargura/2;
+			vrSpriteLogoUno.iPosY = iAltura/2;
+			vrSpriteLogoUno.fAlpha = 0.0f;
+			vrSpriteLogoUno.fEscalaX = ((iLargura    /  5.0f) / vrSpriteLogoUno.iLarguraQuadro);
+			vrSpriteLogoUno.fEscalaY = ((iAltura    /   6.0f) / vrSpriteLogoUno.iAlturaQuadro);
 
-				vrSpriteTitulo = new CSpriteAnimacao(vrOpenGL, R.drawable.titulo, 256, 64, 256, 64);
-				vrSpriteTitulo.iPosX = iLargura/6;
-				vrSpriteTitulo.fAngulo = 30;
-				vrSpriteTitulo.iPosY = iAltura/2;
-				vrSpriteTitulo.fEscalaX = ((iLargura     /  8.0f) / vrSpriteTitulo.iLarguraQuadro);
-				vrSpriteTitulo.fEscalaY = ((iAltura     /   10.0f) / vrSpriteTitulo.iAlturaQuadro);
+			vrSpriteTitulo = new CSpriteAnimacao(vrOpenGL, R.drawable.titulo, 256, 64, 256, 64);
+			vrSpriteTitulo.iPosX = iLargura/6;
+			vrSpriteTitulo.fAngulo = 30;
+			vrSpriteTitulo.iPosY = iAltura/2;
+			vrSpriteTitulo.fEscalaX = ((iLargura     /  8.0f) / vrSpriteTitulo.iLarguraQuadro);
+			vrSpriteTitulo.fEscalaY = ((iAltura     /   10.0f) / vrSpriteTitulo.iAlturaQuadro);
 
-				//Cria o vetor de sprites
-				vetBotoes = new CSpriteAnimacao[3];
-				vetBotoes[0] = new CSpriteAnimacao(vrOpenGL, R.drawable.jogar, 128, 42, 128, 128);
-				vetBotoes[1] = new CSpriteAnimacao(vrOpenGL, R.drawable.ajuda, 128, 42, 128, 128);
-				vetBotoes[2] = new CSpriteAnimacao(vrOpenGL, R.drawable.sair, 128, 42, 128, 128);
+			//Cria o vetor de sprites
+			vetBotoes = new CSpriteAnimacao[3];
+			vetBotoes[0] = new CSpriteAnimacao(vrOpenGL, R.drawable.jogar, 128, 42, 128, 128);
+			vetBotoes[1] = new CSpriteAnimacao(vrOpenGL, R.drawable.ajuda, 128, 42, 128, 128);
+			vetBotoes[2] = new CSpriteAnimacao(vrOpenGL, R.drawable.sair, 128, 42, 128, 128);
 
-				//Cria os quadros da animacao
-				CQuadro[] vrQuadro0 = new CQuadro[1];
-				vrQuadro0[0] = new CQuadro(0);
-				CQuadro[] vrQuadro1 = new CQuadro[1];
-				vrQuadro1[0] = new CQuadro(1);
-				CQuadro[] vrQuadro2 = new CQuadro[1];
-				vrQuadro2[0] = new CQuadro(2);
+			//Cria os quadros da animacao
+			CQuadro[] vrQuadro0 = new CQuadro[1];
+			vrQuadro0[0] = new CQuadro(0);
+			CQuadro[] vrQuadro1 = new CQuadro[1];
+			vrQuadro1[0] = new CQuadro(1);
+			CQuadro[] vrQuadro2 = new CQuadro[1];
+			vrQuadro2[0] = new CQuadro(2);
 
-				//Configura a escala, as animacoes e posicao de cada botao
-				for (int iIndex = 0; iIndex < 3; iIndex++)
-				{
-					vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro0);
-					vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro1);
-					vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro2);
-					vetBotoes[iIndex].iPosX = iLargura/2;
-					vetBotoes[iIndex].configuraAnimcaceoAtual(0);
-					vetBotoes[iIndex].fEscalaX = ((iLargura     /  13.0f) / vetBotoes[iIndex].iLarguraQuadro);
-					vetBotoes[iIndex].fEscalaY = ((iAltura     /  14.0f) / vetBotoes[iIndex].iAlturaQuadro);
-				}
-				vetBotoes[0].iPosY = iAltura/2 + iAltura/4;
-				vetBotoes[1].iPosY = iAltura/2;
-				vetBotoes[2].iPosY = iAltura/2 - iAltura/4;
-		//	} 
+			//Configura a escala, as animacoes e posicao de cada botao
+			for (int iIndex = 0; iIndex < 3; iIndex++)
+			{
+				vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro0);
+				vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro1);
+				vetBotoes[iIndex].criaAnimacao(1, false, vrQuadro2);
+				vetBotoes[iIndex].iPosX = iLargura/2;
+				vetBotoes[iIndex].configuraAnimcaceoAtual(0);
+				vetBotoes[iIndex].fEscalaX = ((iLargura     /  13.0f) / vetBotoes[iIndex].iLarguraQuadro);
+				vetBotoes[iIndex].fEscalaY = ((iAltura     /  14.0f) / vetBotoes[iIndex].iAlturaQuadro);
+			}
+			vetBotoes[0].iPosY = iAltura/2 + iAltura/4;
+			vetBotoes[1].iPosY = iAltura/2;
+			vetBotoes[2].iPosY = iAltura/2 - iAltura/4;
+			
+			// clique nos botões
+			
+			
+			//	} 
 			/*if (iEstado == JOGO)
 			{
 				int tamanhoTela = 0;
@@ -324,25 +330,26 @@ public class MainActivity extends Activity {
 			//Limpa o fundo da tela
 			vrOpenGL.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
+			
 			//Gerencia os estados do jogo
 			if (iEstado == ABERTURA)
 			{
 				abertura();
 			}
-			if (iEstado == MENU)
+			else if (iEstado == MENU)
 			{
 				menu();
 			} 
-			if (iEstado == JOGO)
+			else if (iEstado == JOGO)
 			{
-				jogar(vrOpenGL);
+				jogo(vrOpenGL);
 			} 
 
 
 			//Executa as etapas de um jogo
 			CGerenteTempo.atualiza();
 			CGerenteEventos.vrEventosTouch.atualizaEstados();
-
+			
 			//Pausa no loop da aplicacao
 			pausa(); 
 
@@ -503,7 +510,7 @@ public class MainActivity extends Activity {
 		{
 			try
 			{
-				Thread.sleep(30);
+				Thread.sleep(40);
 			}
 			catch(Exception e)
 			{	
@@ -512,14 +519,17 @@ public class MainActivity extends Activity {
 
 		// Méto que gerencia o jogo
 
-		public void jogar(GL10 vrOpenGL)
+		public void jogo(GL10 vrOpenGL)
 		{
 
+			//Inicializacao o gerenciador de acelerometro e o gerenciador de sons
+			CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(vrActivity);
 			//Executa todas as etapas do jogo
 			trataEventos();
 			//	atualizaInimigos();
 			desenha(vrOpenGL);
 			//	pausa(); 
+		
 		}
 		//Metodo que gerencia o estado de abertura
 		public void abertura()
@@ -554,7 +564,7 @@ public class MainActivity extends Activity {
 		public void menu()
 		{
 			vrSpriteTitulo.desenhaSprite();
-
+			
 			//Verifica se houve toque no botao e configura as animacoes
 			for(int iIndex=0; iIndex < 3; iIndex++)
 			{		
@@ -584,7 +594,7 @@ public class MainActivity extends Activity {
 						}
 					}
 				}
-
+				
 				//Atualiza sprites
 				vetBotoes[iIndex].desenhaSprite();
 			}
