@@ -20,9 +20,11 @@ import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.MotionEvent;
+import android.view.View.OnTouchListener;
 
 
 //Classe que implementa a atividade principal da aplicacao Android
@@ -105,7 +107,7 @@ public class MainActivity extends Activity {
 		vrSuperficieDesenho.onResume();
 	}
 
-	class Renderizador implements Renderer
+	class Renderizador implements Renderer, OnTouchListener
 	{	
 		//Constantes da classe
 
@@ -130,6 +132,8 @@ public class MainActivity extends Activity {
 		int iTempX = 0;
 		int iTempY = 0;
 		Random vrRand = new Random();
+		private float fPosX = 0;
+		private float fPosY = 0;
 
 
 
@@ -141,6 +145,7 @@ public class MainActivity extends Activity {
 			CGerenteTempo.inicializaGerente();
 			CGerenteGrafico.validaContexto(vrActivity);
 			CGerenteSons.inicializa(vrActivity);
+			CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(vrActivity);
 		} 
 
 		//Metodo chamado no momento em que a Activity e criada ou quando retorna do estado Resume
@@ -170,7 +175,13 @@ public class MainActivity extends Activity {
 			//CGerenteSons.vrMusica.carregaMusica("musica.mid",true);
 			//CGerenteSons.vrMusica.reproduzMusica();*/
 		}
-
+		
+		 public boolean onTouch(View vrView, MotionEvent vrMotion){
+			fPosX = vrMotion.getX();
+			fPosY = iAltura - vrMotion.getY();
+			
+			return true;
+		}
 		//Metodo chamado quando tamanho da tela e alterado
 		public void onSurfaceChanged(GL10 vrOpenGL, int pLargura, int pAltura)
 		{	
@@ -265,10 +276,7 @@ public class MainActivity extends Activity {
 			vetBotoes[0].iPosY = iAltura/2 + iAltura/4;
 			vetBotoes[1].iPosY = iAltura/2;
 			vetBotoes[2].iPosY = iAltura/2 - iAltura/4;
-			
-			// clique nos botões
-			
-			
+		
 			//	} 
 			/*if (iEstado == JOGO)
 			{
@@ -523,9 +531,9 @@ public class MainActivity extends Activity {
 		{
 
 			//Inicializacao o gerenciador de acelerometro e o gerenciador de sons
-			CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(vrActivity);
+			//CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(vrActivity);
 			//Executa todas as etapas do jogo
-			trataEventos();
+			 trataEventos();
 			//	atualizaInimigos();
 			desenha(vrOpenGL);
 			//	pausa(); 
@@ -591,6 +599,11 @@ public class MainActivity extends Activity {
 						if (vetBotoes[iIndex].iQuadroAtual != 0)
 						{
 							vetBotoes[iIndex].configuraAnimcaceoAtual(0);
+							if (iIndex == 0)
+							{
+								vetBotoes[iIndex].configuraAnimcaceoAtual(0);
+								iEstado = JOGO;
+							}
 						}
 					}
 				}
