@@ -20,11 +20,9 @@ import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.MotionEvent;
-import android.view.View.OnTouchListener;
 
 
 //Classe que implementa a atividade principal da aplicacao Android
@@ -44,29 +42,7 @@ public class MainActivity extends Activity {
 
 	//Metodo chamado no momento da criacao da Activity
 	protected void onCreate(Bundle savedInstanceState) {
-		/*	super.onCreate(savedInstanceState);
-
-		vrSuperficieDesenho = new GLSurfaceView(this);
-
-		//Preparacao da janela da aplicacao (modo tela cheia)
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-		//Cria o objeto renderizador associado a superficie
-		Renderizador render = new Renderizador();
-
-		//Configurando a superficie de desenho
-		vrSuperficieDesenho.setRenderer(render);
-
-		//Registra a superficie de desenho ao tratador de eventos
-		vrSuperficieDesenho.setOnTouchListener(CGerenteEventos.vrEventosTouch);
-
-		//Ativa a superficie de desenho na janela
-		setContentView(vrSuperficieDesenho); 
-
-		//Inicializacao o gerenciador de acelerometro e o gerenciador de sons
-		CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(this);*/
+		
 
 		super.onCreate(savedInstanceState);
 
@@ -88,6 +64,9 @@ public class MainActivity extends Activity {
 
 		//Ativa a superficie de desenho na janela
 		setContentView(vrSuperficieDesenho); 
+		
+		//Inicializacao o gerenciador de acelerometro e o gerenciador de sons
+	    CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(this);
 	}
 
 
@@ -107,7 +86,7 @@ public class MainActivity extends Activity {
 		vrSuperficieDesenho.onResume();
 	}
 
-	class Renderizador implements Renderer, OnTouchListener
+	class Renderizador implements Renderer 
 	{	
 		//Constantes da classe
 
@@ -132,8 +111,7 @@ public class MainActivity extends Activity {
 		int iTempX = 0;
 		int iTempY = 0;
 		Random vrRand = new Random();
-		private float fPosX = 0;
-		private float fPosY = 0;
+ 
 
 
 
@@ -176,23 +154,11 @@ public class MainActivity extends Activity {
 			//CGerenteSons.vrMusica.reproduzMusica();*/
 		}
 		
-		 public boolean onTouch(View vrView, MotionEvent vrMotion){
-			fPosX = vrMotion.getX();
-			fPosY = iAltura - vrMotion.getY();
-			
-			return true;
-		}
+	 
 		//Metodo chamado quando tamanho da tela e alterado
 		public void onSurfaceChanged(GL10 vrOpenGL, int pLargura, int pAltura)
 		{	
 
-			//Gerencia os estados do jogo
-			/*	if (iEstado == ABERTURA)
-			{
-				abertura();
-			}
-			if (iEstado == MENU)
-			{*/
 			//Armazena a altura e largura da tela
 			iLargura = pLargura;
 			iAltura = pAltura;
@@ -277,56 +243,7 @@ public class MainActivity extends Activity {
 			vetBotoes[1].iPosY = iAltura/2;
 			vetBotoes[2].iPosY = iAltura/2 - iAltura/4;
 		
-			//	} 
-			/*if (iEstado == JOGO)
-			{
-				int tamanhoTela = 0;
-
-				//Armazena a altura e largura da tela
-				iLargura = pLargura;
-				iAltura = pAltura;
-
-
-
-				// tamanho da barra 
-				tamanhoTela = (iLargura * 5)/100;
-				TAMANHO_QUADRO = tamanhoTela;
-
-				//Cria a barra
-				vetSpritesJogador = new CSprite[1];
-				//vetSpritesJogador[0] = new CSprite(iLargura/2 - (TAMANHO_QUADRO *3)/2,  20, TAMANHO_QUADRO);
-				vetSpritesJogador[0] = new CSprite(iLargura/2 - (TAMANHO_QUADRO *3)/2,  20, TAMANHO_QUADRO);
-				vetSpritesJogador[0].setCor(1, 1, 0);
-				vetSpritesJogador[0].setEscala(4, 1);
-
-
-
-				//Configura a viewport
-				vrOpenGL.glViewport(0, 0, iLargura, iAltura);
-
-				//Configura a janela de visualizacao
-				//Ativa a matriz de projecao para configuraçã  o da janela de visualizacao
-				vrOpenGL.glMatrixMode(GL10.GL_PROJECTION);
-
-				//Inicia a matriz de projeção com a matriz identidade
-				vrOpenGL.glLoadIdentity();
-
-				//Seta as coordenadas da janela de visualizacao
-				vrOpenGL.glOrthof(0.0f, iLargura, 0.0f, iAltura,  1.0f, -1.0f);
-
-				//Enviando os vertices ao OpenGL
-				vrOpenGL.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-				vrOpenGL.glVertexPointer(2, GL10.GL_FLOAT, 0, CNioBuffer.geraNioBuffer( new float[]{0.0f, 0.0f, 0.0f, TAMANHO_QUADRO, TAMANHO_QUADRO, 0.0f, TAMANHO_QUADRO, TAMANHO_QUADRO}));
-
-				//Configura a cor do desenho
-				vrOpenGL.glColor4f(1.0f, 0.0f,0.0f,1.0f);
-
-				//Inicia a matriz de desenho
-				vrOpenGL.glMatrixMode(GL10.GL_MODELVIEW);
-
-				//Inicia a matriz de desenho com a matriz identidade
-				vrOpenGL.glLoadIdentity();
-			} */
+		
 
 
 		}
@@ -529,9 +446,52 @@ public class MainActivity extends Activity {
 
 		public void jogo(GL10 vrOpenGL)
 		{
+			int tamanhoTela = 0;
+			TAMANHO_QUADRO = 50;
+  
+			// tamanho da barra 
+			tamanhoTela = (iLargura * 5)/100;
+			TAMANHO_QUADRO = tamanhoTela;
+
+			//Cria a barra
+			vetSpritesJogador = new CSprite[1];
+			//vetSpritesJogador[0] = new CSprite(iLargura/2 - (TAMANHO_QUADRO *3)/2,  20, TAMANHO_QUADRO);
+			vetSpritesJogador[0] = new CSprite(iLargura/2 - (TAMANHO_QUADRO *3)/2,  20, TAMANHO_QUADRO);
+			vetSpritesJogador[0].setCor(1, 1, 0);
+			vetSpritesJogador[0].setEscala(4, 1);
+
+
+
+			//Configura a viewport
+			vrOpenGL.glViewport(0, 0, iLargura, iAltura);
+
+			//Configura a janela de visualizacao
+			//Ativa a matriz de projecao para configuraçã  o da janela de visualizacao
+			vrOpenGL.glMatrixMode(GL10.GL_PROJECTION);
+
+			//Inicia a matriz de projeção com a matriz identidade
+			vrOpenGL.glLoadIdentity();
+
+			//Seta as coordenadas da janela de visualizacao
+			vrOpenGL.glOrthof(0.0f, iLargura, 0.0f, iAltura,  1.0f, -1.0f);
+
+			//Enviando os vertices ao OpenGL
+			vrOpenGL.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+			vrOpenGL.glVertexPointer(2, GL10.GL_FLOAT, 0, CNioBuffer.geraNioBuffer( new float[]{0.0f, 0.0f, 0.0f, TAMANHO_QUADRO, TAMANHO_QUADRO, 0.0f, TAMANHO_QUADRO, TAMANHO_QUADRO}));
+
+			//Configura a cor do desenho
+			vrOpenGL.glColor4f(1.0f, 0.0f,0.0f,1.0f);
+
+			//Inicia a matriz de desenho
+			vrOpenGL.glMatrixMode(GL10.GL_MODELVIEW);
+
+			//Inicia a matriz de desenho com a matriz identidade
+			vrOpenGL.glLoadIdentity();
+			
 
 			//Inicializacao o gerenciador de acelerometro e o gerenciador de sons
-			//CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(vrActivity);
+			 CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(vrActivity);
+			 
 			//Executa todas as etapas do jogo
 			 trataEventos();
 			//	atualizaInimigos();
