@@ -33,7 +33,6 @@ public class MainActivity extends Activity {
 	private int centroA;
 	private int centroL;
 	private float fAngulo = 0.0f;
-	//private int iIncAngulo = 1;
 	private int sentidoA = 0;
 	private int sentidoL = 0;
 	private int totalA = 0;
@@ -138,20 +137,6 @@ public class MainActivity extends Activity {
 			vetCodigoSons[0]  = CGerenteSons.vrEfeitos.carregaSom("btnOn.wav");
 
 
-			/*//Configura a cor de limpeza da tela
-			vrOpenGL.glClearColor(0,0,0,1);
-
-			//Cria o vetor de sons
-			vetCodigoSons = new int[2];
-			//vetCodigoSons[0]  = CGerenteSons.vrEfeitos.carregaSom("efeito0.wav");
-			//vetCodigoSons[1]  = CGerenteSons.vrEfeitos.carregaSom("efeito1.wav");
-
-			//Cria o vetor de objetos e inicializa as posicoes
-			//vetSpritesInimigos = new CSprite[10];
-
-			//Carrega a musica do jogo
-			//CGerenteSons.vrMusica.carregaMusica("musica.mid",true);
-			//CGerenteSons.vrMusica.reproduzMusica();*/
 		}
 		
 	 
@@ -159,6 +144,7 @@ public class MainActivity extends Activity {
 		public void onSurfaceChanged(GL10 vrOpenGL, int pLargura, int pAltura)
 		{	
 
+			
 			//Armazena a altura e largura da tela
 			iLargura = pLargura;
 			iAltura = pAltura;
@@ -272,11 +258,11 @@ public class MainActivity extends Activity {
 
 
 			//Executa as etapas de um jogo
-			CGerenteTempo.atualiza();
-			CGerenteEventos.vrEventosTouch.atualizaEstados();
+			 CGerenteTempo.atualiza();
+			 CGerenteEventos.vrEventosTouch.atualizaEstados();
 			
 			//Pausa no loop da aplicacao
-			pausa(); 
+			//pausa(); 
 
 
 		}
@@ -288,7 +274,7 @@ public class MainActivity extends Activity {
 			//Limpa o fundo da tela
 			vrOpenGL.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			vrOpenGL.glLoadIdentity();
-
+   
 			// quadrado na tela
 			if(i == 0)
 			{
@@ -389,6 +375,7 @@ public class MainActivity extends Activity {
 		{
 			defineDirecaoJogador();
 			atualizaPosicaoJogador();	
+			
 		}
 
 
@@ -455,7 +442,6 @@ public class MainActivity extends Activity {
 
 			//Cria a barra
 			vetSpritesJogador = new CSprite[1];
-			//vetSpritesJogador[0] = new CSprite(iLargura/2 - (TAMANHO_QUADRO *3)/2,  20, TAMANHO_QUADRO);
 			vetSpritesJogador[0] = new CSprite(iLargura/2 - (TAMANHO_QUADRO *3)/2,  20, TAMANHO_QUADRO);
 			vetSpritesJogador[0].setCor(1, 1, 0);
 			vetSpritesJogador[0].setEscala(4, 1);
@@ -491,7 +477,7 @@ public class MainActivity extends Activity {
 
 			//Inicializacao o gerenciador de acelerometro e o gerenciador de sons
 			 CGerenteEventos.vrEventosAcelerometro.inicializaAcelerometro(vrActivity);
-			 
+	 
 			//Executa todas as etapas do jogo
 			 trataEventos();
 			//	atualizaInimigos();
